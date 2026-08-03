@@ -43,8 +43,7 @@ echo "*******************************************"
 sleep 3
 exit 1
 else
-
-echo "> Plugin not found"
+echo
 sleep 2
 
 fi
