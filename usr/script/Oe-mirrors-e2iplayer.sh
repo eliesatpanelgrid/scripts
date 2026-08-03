@@ -12,11 +12,9 @@ package="enigma2-plugin-extensions-$plugin"
 #########################################
 if command -v dpkg >/dev/null 2>&1; then
     package_manager="apt"
-    status_file="/var/lib/dpkg/status"
     uninstall_command="apt-get purge --auto-remove -y"
 else
     package_manager="opkg"
-    status_file="/var/lib/opkg/status"
     uninstall_command="opkg remove --force-depends"
 fi
 
@@ -35,17 +33,15 @@ cleanup() {
 
 # Check and Remove Plugin
 #########################################
-if [ -d "$plugin_path" ] || grep -q "$package" "$status_file" 2>/dev/null; then
-    echo "> Plugin detected. Removing existing version, please wait..."
+if [ -d "$plugin_path" ]; then
+    echo "> Plugin detected in $plugin_path. Removing existing version..."
     sleep 2
 
-    # Remove directory if found
-    [ -d "$plugin_path" ] && rm -rf "$plugin_path" >/dev/null 2>&1
+    # Remove directory
+    rm -rf "$plugin_path" >/dev/null 2>&1
 
-    # Remove package via package manager
-    if grep -q "$package" "$status_file" 2>/dev/null; then
-        $uninstall_command "$package" >/dev/null 2>&1
-    fi
+    # Purge/remove package via package manager
+    $uninstall_command "$package" >/dev/null 2>&1
 
     echo "*******************************************"
     echo "*     Removal Completed Successfully     *"
@@ -55,7 +51,7 @@ if [ -d "$plugin_path" ] || grep -q "$package" "$status_file" 2>/dev/null; then
     exit 1
 fi
 
-# Download and Install (Runs ONLY if plugin was NOT found)
+# Download and Install (Runs ONLY if plugin directory does NOT exist)
 #########################################
 echo "> Plugin not found. Installing latest version..."
 
@@ -72,12 +68,11 @@ fi
 # Clean up any leftover temp files first
 rm -rf /tmp/e2iplayer-python3.zip /tmp/e2iplayer-python3
 
-# Download with strict output redirect
+# Download zip
 wget --no-check-certificate "https://github.com/oe-mirrors/e2iplayer/archive/refs/heads/python3.zip" -O /tmp/e2iplayer-python3.zip
 
 # Check if zip file actually exists and has content
 if [ -s /tmp/e2iplayer-python3.zip ]; then
-    # Overwrite without prompting (-o) to avoid stdio hanging
     unzip -o -q /tmp/e2iplayer-python3.zip -d /tmp/ < /dev/null
     
     if [ -d "/tmp/e2iplayer-python3/IPTVPlayer" ]; then
