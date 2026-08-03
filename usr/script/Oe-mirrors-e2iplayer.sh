@@ -41,7 +41,7 @@ echo "*        Removal Completed Successfully   *"
 echo "*            Provided by Eliesat          *"
 echo "*******************************************"
 sleep 3
-
+exit 1
 else
 
 echo "> Plugin not found"
