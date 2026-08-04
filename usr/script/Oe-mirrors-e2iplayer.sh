@@ -81,7 +81,8 @@ if [ -s /tmp/e2iplayer-python3.zip ]; then
         rm -rf /tmp/e2iplayer-python3
         
         cleanup
-        echo "> Installation completed successfully!"
+         echo "> e2iplayer package installed successfully"
+         echo "> Maintained By ElieSatpanelgrid team"
     else
         echo "> Error: Extracted files not found."
         exit 1
